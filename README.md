@@ -1,36 +1,43 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CollabDocs
 
-## Getting Started
+A lightweight Google Docs-style workspace built with Next.js, TipTap, and PostgreSQL-ready persistence.
 
-First, run the development server:
+## Prerequisites
 
-```bash
+- Node.js 20.9 or later
+- npm
+- PostgreSQL only when using durable hosted storage (recommended: a free Neon database)
+
+## Windows PowerShell setup
+
+```powershell
+Set-Location C:\Users\shaha\projects\collabdocs
+npm install
+Copy-Item .env.example .env.local
+# Edit .env.local and set DATABASE_URL for PostgreSQL, or leave it unset for local development.
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000`. Verify the app with:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```powershell
+npm test
+npx tsc --noEmit
+npm run lint
+npm run build
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Demo users
 
-## Learn More
+- Alex Morgan — `alex@collabdocs.demo`
+- Jordan Lee — `jordan@collabdocs.demo`
 
-To learn more about Next.js, take a look at the following resources:
+The sidebar selector sets an HTTP-only demo-session cookie. It is deliberately simulated authentication, not production-grade identity or authorization.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Persistence and deployment
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+With `DATABASE_URL` configured, the app creates its `documents` table on first request and persists documents, TipTap JSON content, ownership, and sharing relationships in PostgreSQL. This suits a free Neon + Vercel deployment. Without it, local development uses `.data/documents.json`; do not use that fallback for serverless production.
 
-## Deploy on Vercel
+## Limitations
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+No real-time co-editing, comments, version history, PDF export, real authentication, or advanced permission roles are included. Markdown imports are safely imported as editable plain text; Markdown syntax is not rendered.
